@@ -62,7 +62,7 @@
 <script src="./js/jquery-1.12.4.min.js"></script>
 <!-- 导入bs的js -->
 <script src="./js/bootstrap/js/bootstrap.min.js"></script>
-<script>
+<!-- <script>
   /*
     功能分析：
       1 对输入框的内容进行检测，不能为空，如果为空进行提示
@@ -106,4 +106,55 @@
   });
 
 
+</script> -->
+
+<!-- 假装看不见上面，又傻了吧唧自己重新写的代码 -->
+<script>
+
+	/*
+	功能分析：
+		1. 当用户名或密码未填写时，提示输入框不能为空
+			- .input_txt  .input_pass
+		2. 将用户名和密码提交给服务端检测
+			- .input_sub
+			- 用户名和密码正确时，跳转到index.html页面
+			- 用户名和密码不正确时，弹框提醒
+	*/
+
+
+	// 设置点击事件
+	$('.input_sub').on('click' , function (e) {
+		// 阻止按钮默认提交操作
+		e.preventDefault();
+		// 检测用户名和密码是否填写完整
+		if ($('.input_txt').val() === '' || $('.input_pass').val() === '') {
+			// 用modal插件修改弹出框格式
+			$('.modal-body').text('内容没有填写完整');
+			$('#myModal').modal();
+			return;
+		};
+
+
+
+		// 检测用户名密码是否正确
+		$.post({
+			url : 'https://autumnfish.cn/big/admin/login',
+			data : {
+				user_name : $('.input_txt').val(),
+				password : $('.input_pass').val()
+			},
+			success : function (res) {
+				// 判断返回值，200跳转到index.html页面，400提示用户名或密码错误
+				if (res.code === 200) {
+					//跳转到index.html页面
+					location.href = 'index.html'
+				} else if (res.code === 400) {
+					// 提示用户名或密码错误
+					$('.modal-body').text('用户名或密码错误');
+					$('#myModal').modal();
+					return;
+				}
+			}
+		})
+	})
 </script>
